@@ -12,4 +12,12 @@ export default defineConfig({
     }),
     tanstackStart(),
   ],
+  esbuild: {
+    // Allow TypeScript files to be imported with .ts/.tsx extensions
+    loader: 'tsx',
+  },
+  resolve: {
+    // Ensure Vite resolves .ts/.tsx extensions properly
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+  },
 })
