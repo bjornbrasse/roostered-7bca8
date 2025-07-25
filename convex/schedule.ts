@@ -8,7 +8,6 @@ import {
 import { getDepartmentBySlugs } from './department.js'
 import { getOrganisationBySlug } from './organisation.js'
 import { ConvexError, v } from 'convex/values'
-import { asyncMap } from '#app/lib/utils.js'
 
 export const scheduleObject = {
 	departmentId: v.id('departments'),

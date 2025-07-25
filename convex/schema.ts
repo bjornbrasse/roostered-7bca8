@@ -23,5 +23,5 @@ export default defineSchema({
 		firstName: v.string(),
 		lastName: v.string(),
 		email: v.string(),
-	}).index('byEmail', ['email']),
+	}).index('by_email', ['email']),
 })

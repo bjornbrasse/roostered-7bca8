@@ -37,7 +37,7 @@ export const createMember = mutation({
 		let userId = (
 			await ctx.db
 				.query('users')
-				.withIndex('byEmail', (q) => q)
+				.withIndex('by_email', (q) => q)
 				.unique()
 		)?._id
 		if (!userId) {

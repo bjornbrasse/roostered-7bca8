@@ -1,4 +1,4 @@
-import { Id } from '#convex/_generated/dataModel.js'
+import { Id } from './_generated/dataModel.js'
 import { mutation, query, type QueryCtx } from './_generated/server.js'
 import { ConvexError, v } from 'convex/values'
 
