@@ -6,6 +6,12 @@ import { Suspense } from "react";
 
 export const Route = createFileRoute("/department_/$depId/schedules")({
   component: RouteComponent,
+  loader: async ({ context, params }) =>
+    context.queryClient.prefetchQuery(
+      convexQuery(api.department.getSchedules, {
+        departmentId: params.depId,
+      }),
+    ),
 });
 
 function RouteComponent() {

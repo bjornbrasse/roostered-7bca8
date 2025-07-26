@@ -82,6 +82,7 @@ export const getEmployees = query({
     return employees
       .filter((e): e is NonNullable<typeof e> => e !== null)
       .map((employee) => ({
+        _id: employee._id,
         email: employee.email,
         firstName: employee.firstName,
         lastName: employee.lastName,

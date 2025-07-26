@@ -37,7 +37,6 @@ import { Route as DepartmentDepIdEmployeesRouteImport } from './routes/departmen
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
 import { Route as OrgDepSdlRouteImport } from './routes/$org.$dep_.$sdl'
-import { Route as OrganisationsOrgIdDepartmentsDepIdRouteImport } from './routes/organisations_.$orgId/departments.$depId'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api.users'
 import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
 
@@ -176,12 +175,6 @@ const OrgDepSdlRoute = OrgDepSdlRouteImport.update({
   path: '/$org/$dep/$sdl',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrganisationsOrgIdDepartmentsDepIdRoute =
-  OrganisationsOrgIdDepartmentsDepIdRouteImport.update({
-    id: '/departments/$depId',
-    path: '/departments/$depId',
-    getParentRoute: () => OrganisationsOrgIdRoute,
-  } as any)
 const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
   id: '/api/users',
   path: '/api/users',
@@ -201,7 +194,7 @@ export interface FileRoutesByFullPath {
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
   '/department/$depId': typeof DepartmentDepIdRouteWithChildren
-  '/organisations/$orgId': typeof OrganisationsOrgIdRouteWithChildren
+  '/organisations/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
@@ -218,7 +211,6 @@ export interface FileRoutesByFullPath {
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
   '/schedules/$id/': typeof SchedulesIdIndexRoute
-  '/organisations/$orgId/departments/$depId': typeof OrganisationsOrgIdDepartmentsDepIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -226,7 +218,7 @@ export interface FileRoutesByTo {
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
   '/department/$depId': typeof DepartmentDepIdRouteWithChildren
-  '/organisations/$orgId': typeof OrganisationsOrgIdRouteWithChildren
+  '/organisations/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/posts': typeof PostsIndexRoute
@@ -242,7 +234,6 @@ export interface FileRoutesByTo {
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
   '/schedules/$id': typeof SchedulesIdIndexRoute
-  '/organisations/$orgId/departments/$depId': typeof OrganisationsOrgIdDepartmentsDepIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -255,7 +246,7 @@ export interface FileRoutesById {
   '/redirect': typeof RedirectRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/department_/$depId': typeof DepartmentDepIdRouteWithChildren
-  '/organisations_/$orgId': typeof OrganisationsOrgIdRouteWithChildren
+  '/organisations_/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules_/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
@@ -272,7 +263,6 @@ export interface FileRoutesById {
   '/schedules_/$id/members': typeof SchedulesIdMembersRoute
   '/schedules_/$id/tasks': typeof SchedulesIdTasksRoute
   '/schedules_/$id/': typeof SchedulesIdIndexRoute
-  '/organisations_/$orgId/departments/$depId': typeof OrganisationsOrgIdDepartmentsDepIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -301,7 +291,6 @@ export interface FileRouteTypes {
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
     | '/schedules/$id/'
-    | '/organisations/$orgId/departments/$depId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -325,7 +314,6 @@ export interface FileRouteTypes {
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
     | '/schedules/$id'
-    | '/organisations/$orgId/departments/$depId'
   id:
     | '__root__'
     | '/'
@@ -354,7 +342,6 @@ export interface FileRouteTypes {
     | '/schedules_/$id/members'
     | '/schedules_/$id/tasks'
     | '/schedules_/$id/'
-    | '/organisations_/$orgId/departments/$depId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,7 +353,7 @@ export interface RootRouteChildren {
   OrganisationsRoute: typeof OrganisationsRoute
   RedirectRoute: typeof RedirectRoute
   DepartmentDepIdRoute: typeof DepartmentDepIdRouteWithChildren
-  OrganisationsOrgIdRoute: typeof OrganisationsOrgIdRouteWithChildren
+  OrganisationsOrgIdRoute: typeof OrganisationsOrgIdRoute
   SchedulesIdRoute: typeof SchedulesIdRouteWithChildren
   OrgDepSdlRoute: typeof OrgDepSdlRoute
   PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
@@ -580,13 +567,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgDepSdlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/organisations_/$orgId/departments/$depId': {
-      id: '/organisations_/$orgId/departments/$depId'
-      path: '/departments/$depId'
-      fullPath: '/organisations/$orgId/departments/$depId'
-      preLoaderRoute: typeof OrganisationsOrgIdDepartmentsDepIdRouteImport
-      parentRoute: typeof OrganisationsOrgIdRoute
-    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -682,18 +662,6 @@ const DepartmentDepIdRouteWithChildren = DepartmentDepIdRoute._addFileChildren(
   DepartmentDepIdRouteChildren,
 )
 
-interface OrganisationsOrgIdRouteChildren {
-  OrganisationsOrgIdDepartmentsDepIdRoute: typeof OrganisationsOrgIdDepartmentsDepIdRoute
-}
-
-const OrganisationsOrgIdRouteChildren: OrganisationsOrgIdRouteChildren = {
-  OrganisationsOrgIdDepartmentsDepIdRoute:
-    OrganisationsOrgIdDepartmentsDepIdRoute,
-}
-
-const OrganisationsOrgIdRouteWithChildren =
-  OrganisationsOrgIdRoute._addFileChildren(OrganisationsOrgIdRouteChildren)
-
 interface SchedulesIdRouteChildren {
   SchedulesIdForwardsRoute: typeof SchedulesIdForwardsRoute
   SchedulesIdMembersRoute: typeof SchedulesIdMembersRoute
@@ -733,7 +701,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrganisationsRoute: OrganisationsRoute,
   RedirectRoute: RedirectRoute,
   DepartmentDepIdRoute: DepartmentDepIdRouteWithChildren,
-  OrganisationsOrgIdRoute: OrganisationsOrgIdRouteWithChildren,
+  OrganisationsOrgIdRoute: OrganisationsOrgIdRoute,
   SchedulesIdRoute: SchedulesIdRouteWithChildren,
   OrgDepSdlRoute: OrgDepSdlRoute,
   PostsPostIdDeepRoute: PostsPostIdDeepRoute,
