@@ -4,10 +4,14 @@ import { routerWithQueryClient } from "@tanstack/react-router-with-query";
 import { DefaultCatchBoundary } from "./components/DefaultCatchBoundary";
 import { NotFound } from "./components/NotFound";
 import { routeTree } from "./routeTree.gen";
+import { ConvexProvider } from "convex/react";
+import { ConvexQueryClient } from "@convex-dev/react-query";
 
-// NOTE: Most of the integration code found here is experimental and will
-// definitely end up in a more streamlined API in the future. This is just
-// to show what's possible with the current APIs.
+const CONVEX_URL = (import.meta as any).env.VITE_CONVEX_URL!;
+  if (!CONVEX_URL) {
+    console.error("missing envar VITE_CONVEX_URL");
+  }
+  const convexQueryClient = new ConvexQueryClient(CONVEX_URL);
 
 export function createRouter() {
   const queryClient = new QueryClient();
@@ -19,6 +23,11 @@ export function createRouter() {
       defaultPreload: "intent",
       defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: () => <NotFound />,
+      Wrap: ({ children }) => (
+        <ConvexProvider client={convexQueryClient.convexClient}>
+          {children}
+        </ConvexProvider>
+      ),
     }),
     queryClient,
   );

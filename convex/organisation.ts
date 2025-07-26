@@ -42,7 +42,7 @@ export const get = query({
   },
 });
 
-export const getAll = query({
+export const list = query({
   handler: async ({ db }) => {
     return db.query("organisations").collect();
   },
