@@ -26,26 +26,24 @@ function RouteComponent() {
 }
 
 function OrganisationList() {
-  const organisations = useQuery(
-    api.organisation.list
-  );
+  const organisations = useQuery(api.organisation.list);
 
-  if(!organisations) return <div>Loading...</div>;
+  if (!organisations) return <div>Loading...</div>;
 
   return (
-      <ul className="grid grid-cols-4 gap-12">
-        {organisations.map((organisation) => (
-          <Link
-            to="/organisations/$id"
-            params={{ id: organisation._id }}
-            key={organisation._id}
-            className="flex aspect-square overflow-hidden rounded-md border border-gray-400"
-          >
-            <div className="h-16 w-full place-self-end border-gray-200 border-t bg-gray-100 p-2">
-              <p className="text-sm">{organisation.name}</p>
-            </div>
-          </Link>
-        ))}
-      </ul>
-  )
+    <ul className="grid grid-cols-4 gap-12">
+      {organisations.map((organisation) => (
+        <Link
+          to="/organisations/$id"
+          params={{ id: organisation._id }}
+          key={organisation._id}
+          className="flex aspect-square overflow-hidden rounded-md border border-gray-400"
+        >
+          <div className="h-16 w-full place-self-end border-gray-200 border-t bg-gray-100 p-2">
+            <p className="text-sm">{organisation.name}</p>
+          </div>
+        </Link>
+      ))}
+    </ul>
+  );
 }

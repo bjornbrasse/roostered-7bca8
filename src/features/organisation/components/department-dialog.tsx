@@ -1,5 +1,5 @@
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
-import { getZodConstraint } from "@conform-to/zod";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
@@ -22,6 +22,7 @@ export function DepartmentDialog({
 }) {
   const { mutate } = useMutation({
     mutationFn: useConvexMutation(api.department.create),
+    mutationKey: ["organisation"],
   });
 
   const [form, fields] = useForm({
@@ -34,12 +35,24 @@ export function DepartmentDialog({
     defaultValue: { name: "", slug: "" },
     onSubmit(e, { submission }) {
       e.preventDefault();
+      console.log("🚀 ~ DepartmentDialog ~ submission: FAIL?", submission);
       if (!submission || submission.status !== "success") return;
+      console.log("🚀 ~ DepartmentDialog ~ submission:", submission.value);
       mutate({
         ...submission.value,
         organisationId: organisation._id,
       });
       form.reset();
+    },
+    onValidate({ formData }) {
+      const submission = parseWithZod(formData, {
+        schema: z.object({
+          name: z.string().min(1, "Naam is verplicht"),
+          slug: z.string().min(1, "Slug is verplicht"),
+        }),
+      });
+      console.log("🚀 ~ onValidate ~ submission:", submission);
+      return submission;
     },
   });
 
