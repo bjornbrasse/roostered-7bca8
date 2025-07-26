@@ -3,49 +3,31 @@ import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import type React from "react";
-import z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "~/components/ui/dialog.tsx";
 import type { Department } from "~/features/department/department-model.ts";
-import type { Organisation } from "~/features/organisation/organisation-model.ts";
-import type { Schedule } from "~/features/schedule/schedule-model.ts";
 import { userInputSchema } from "~/features/user/user-model.ts";
 
-export function MemberDialog({
+export function DepartmentEmployeeDialog({
   button,
   department,
-  organisation,
-}:
-  | {
-      button: React.ReactNode;
-      organisation: Pick<Organisation, "_id">;
-      department?: never;
-      schedule?: never;
-    }
-  | {
-      button: React.ReactNode;
-      organisation: Pick<Organisation, "_id">;
-      department: Pick<Department, "_id">;
-      schedule?: never;
-    }
-  | {
-      button: React.ReactNode;
-      organisation: Pick<Organisation, "_id">;
-      department: Pick<Department, "_id">;
-      schedule: Pick<Schedule, "_id">;
-    }) {
+}: {
+  button?: React.ReactNode;
+  department: Pick<Department, "_id">;
+}) {
   const createDepartmentEmployee = useMutation(api.department.addEmployee);
 
+  const schema = userInputSchema.omit({ organisationId: true });
+
   const [form, fields] = useForm({
-    constraint: getZodConstraint(userInputSchema),
+    constraint: getZodConstraint(schema),
     defaultValue: {
       email: "",
       firstName: "",
       lastName: "",
-      organisationId: organisation?._id,
     },
     onSubmit: async (e, { submission }) => {
       e.preventDefault();

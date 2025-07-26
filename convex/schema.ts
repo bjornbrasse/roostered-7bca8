@@ -18,10 +18,9 @@ export default defineSchema({
     departmentId: v.id("departments"),
   }).index("by_departmentId", ["departmentId"]),
   organisations: defineTable(organisationObject).index("by_slug", ["slug"]),
-  schedules: defineTable(scheduleObject).index("by_slug_and_departmentId", [
-    "slug",
-    "departmentId",
-  ]),
+  schedules: defineTable(scheduleObject)
+    .index("by_slug_and_departmentId", ["slug", "departmentId"])
+    .index("by_departmentId", ["departmentId"]),
   sessions: defineTable(sessionObject),
   tasks: defineTable(taskObject)
     .index("by_departmentId", ["departmentId"])

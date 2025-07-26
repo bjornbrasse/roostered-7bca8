@@ -31,9 +31,9 @@ export const listByOrganisationId = query({
 });
 
 export const getById = query({
-  args: { id: v.string() },
+  args: { depId: v.string() },
   handler: async (ctx, args) => {
-    const department = await ctx.db.get(args.id as Id<"departments">);
+    const department = await ctx.db.get(args.depId as Id<"departments">);
     return department;
   },
 });
@@ -79,6 +79,19 @@ export const getEmployees = query({
       }),
     );
     return employees.filter((e): e is NonNullable<typeof e> => e !== null);
+  },
+});
+
+export const getSchedules = query({
+  args: { departmentId: v.string() },
+  handler: async (ctx, args) => {
+    const department = await ctx.db.get(args.departmentId as Id<"departments">);
+    if (!department) throw new ConvexError("Department not found");
+    return await ctx.db
+      .query("schedules")
+      .withIndex("by_departmentId")
+      .filter((q) => q.eq(q.field("departmentId"), department._id))
+      .collect();
   },
 });
 

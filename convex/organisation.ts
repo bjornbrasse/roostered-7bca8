@@ -11,11 +11,9 @@ export const organisationObject = {
 // QUERIES
 
 export const getById = query({
-  args: { organisationId: v.string() },
+  args: { orgId: v.string() },
   handler: async (ctx, args) => {
-    const organisation = await ctx.db.get(
-      args.organisationId as Id<"organisations">,
-    );
+    const organisation = await ctx.db.get(args.orgId as Id<"organisations">);
     if (!organisation) return null;
     const departments = await ctx.db
       .query("departments")

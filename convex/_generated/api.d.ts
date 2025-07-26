@@ -18,6 +18,7 @@ import type * as department from "../department.js";
 import type * as organisation from "../organisation.js";
 import type * as schedule from "../schedule.js";
 import type * as session from "../session.js";
+import type * as specialDate from "../specialDate.js";
 import type * as task from "../task.js";
 import type * as team from "../team.js";
 import type * as user from "../user.js";
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   organisation: typeof organisation;
   schedule: typeof schedule;
   session: typeof session;
+  specialDate: typeof specialDate;
   task: typeof task;
   team: typeof team;
   user: typeof user;

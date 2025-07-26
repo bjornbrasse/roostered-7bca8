@@ -5,26 +5,22 @@ import { api } from "convex/_generated/api";
 import { CrossIcon } from "lucide-react";
 import { DepartmentDialog } from "~/features/organisation/components/department-dialog.tsx";
 
-export const Route = createFileRoute("/organisations_/$id")({
+export const Route = createFileRoute("/organisations_/$orgId")({
   component: RouteComponent,
-  loader: async (opts) => {
-    const organisation = opts.context.queryClient.prefetchQuery(
-      convexQuery(api.organisation.getById, {
-        organisationId: opts.params.id,
-      }),
+  loader: async ({ context, params: { orgId } }) => {
+    const organisation = context.queryClient.prefetchQuery(
+      convexQuery(api.organisation.getById, { orgId }),
     );
     return { organisation };
   },
 });
 
 function RouteComponent() {
-  const { data: organisation } = useSuspenseQuery(
-    convexQuery(api.organisation.getById, {
-      organisationId: Route.useParams().id,
-    }),
-  );
+  const { orgId } = Route.useParams();
 
-  const organisationId = Route.useParams().id;
+  const { data: organisation } = useSuspenseQuery(
+    convexQuery(api.organisation.getById, { orgId }),
+  );
 
   return (
     <div className="flex h-full flex-col gap-4 p-12">
@@ -52,8 +48,8 @@ function RouteComponent() {
           <ul className="no-list">
             {organisation?.departments.map((department) => (
               <Link
-                to="/organisations/$id/departments/$depId"
-                params={{ id: organisationId, depId: department._id }}
+                to="/organisations/$orgId/departments/$depId"
+                params={{ orgId, depId: department._id }}
                 activeProps={{ className: "bg-gray-300" }}
                 className="block rounded-md p-2"
                 key={department._id}
