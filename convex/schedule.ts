@@ -14,7 +14,7 @@ import { organisationGetBySlug } from "./organisation.js";
 export const scheduleObject = {
   departmentId: v.id("departments"),
   name: v.string(),
-  slug: v.optional(v.string()),
+  slug: v.string(),
 };
 
 export const scheduleSlugs = {

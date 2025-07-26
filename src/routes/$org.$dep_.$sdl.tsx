@@ -5,9 +5,5 @@ export const Route = createFileRoute("/$org/$dep_/$sdl")({
 });
 
 function RouteComponent() {
-  return (
-    <div className="border-4 border-indigo-800 bg-sky-100 p-8">
-      Hello "/$org/$dep_/$sdl"!
-    </div>
-  );
+  return <div className="h-full p-8">Hello "/$org/$dep_/$sdl"!</div>;
 }

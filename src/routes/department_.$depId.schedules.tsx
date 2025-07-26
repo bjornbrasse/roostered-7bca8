@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Suspense } from "react";
 
@@ -23,11 +23,22 @@ function RouteComponent() {
 
   return (
     <Suspense fallback={<div>Loading schedules...</div>}>
-      <ul>
-        {schedules.map((schedule) => (
-          <li key={schedule._id}>{schedule.name}</li>
+      <div className="pl-8">
+        {schedules.map(({ org, dep, slug: sdl, ...schedule }) => (
+          <Link
+            to="/$org/$dep/$sdl"
+            params={{
+              org,
+              dep,
+              sdl,
+            }}
+            className="block rounded-sm bg-indigo-100 p-2"
+            key={schedule._id}
+          >
+            {schedule.name}
+          </Link>
         ))}
-      </ul>
+      </div>
     </Suspense>
   );
 }

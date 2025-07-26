@@ -14,7 +14,7 @@ import { zMutation } from "./utils.js";
 export const departmentObject = {
   name: v.string(),
   organisationId: v.id("organisations"),
-  slug: v.optional(v.string()),
+  slug: v.string(),
 };
 
 // QUERIES
@@ -94,12 +94,21 @@ export const getSchedules = query({
   args: { departmentId: v.string() },
   handler: async (ctx, args) => {
     const department = await ctx.db.get(args.departmentId as Id<"departments">);
-    if (!department) throw new ConvexError("Department not found");
-    return await ctx.db
+    if (!department) return [];
+    const organisation = await organisationGetById(ctx, {
+      organisationId: department.organisationId,
+    });
+    if (!organisation) return [];
+    const schedules = await ctx.db
       .query("schedules")
       .withIndex("by_departmentId")
       .filter((q) => q.eq(q.field("departmentId"), department._id))
       .collect();
+    return schedules.map((s) => ({
+      ...s,
+      org: organisation.slug,
+      dep: department.slug,
+    }));
   },
 });
 
@@ -109,7 +118,7 @@ export const create = mutation({
   args: {
     name: v.string(),
     organisationId: v.string(),
-    slug: v.optional(v.string()),
+    slug: v.string(),
   },
   handler: async ({ db }, args) => {
     await db.insert("departments", {
