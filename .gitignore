@@ -5,6 +5,8 @@ yarn.lock
 .DS_Store
 .cache
 .env
+.env.local
+
 .vercel
 .nitro
 .output
@@ -19,4 +21,3 @@ yarn.lock
 /blob-report/
 /playwright/.cache/
 
-.env.local

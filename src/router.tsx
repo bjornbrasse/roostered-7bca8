@@ -9,14 +9,13 @@ import { DefaultCatchBoundary } from "./components/DefaultCatchBoundary";
 import { NotFound } from "./components/NotFound";
 import { routeTree } from "./routeTree.gen";
 
-// const CONVEX_URL = (import.meta as any).env.VITE_CONVEX_URL!;
-//   if (!CONVEX_URL) {
-//     console.error("missing envar VITE_CONVEX_URL");
-//   }
-//   const convexQueryClient = new ConvexQueryClient(CONVEX_URL);
+const CONVEX_URL = (import.meta as any).env.VITE_CONVEX_URL!;
+if (!CONVEX_URL) {
+  console.error("missing envar VITE_CONVEX_URL");
+}
 
-export function createRouter(config: { convexUrl: string }) {
-  const convexQueryClient = new ConvexQueryClient(config.convexUrl);
+export function createRouter() {
+  const convexQueryClient = new ConvexQueryClient(CONVEX_URL);
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
@@ -39,6 +38,8 @@ export function createRouter(config: { convexUrl: string }) {
       Wrap: ({ children }) => (
         <ConvexProvider client={convexQueryClient.convexClient}>
           {children}
+          {/* <ReactQueryDevtools initialIsOpen={false} />
+          <TanStackRouterDevtools position="bottom-right" /> */}
         </ConvexProvider>
       ),
     }),

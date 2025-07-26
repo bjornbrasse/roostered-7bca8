@@ -84,9 +84,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="h-screen">
         {children}
         <Scripts />
-        <TanStackRouterDevtools position="bottom-right" />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
+        {import.meta.env.DEV && (
+          <>
+            <ReactQueryDevtools
+              buttonPosition="bottom-left"
+              initialIsOpen={false}
+            />
+            <TanStackRouterDevtools position="bottom-right" />
+          </>
+        )}
       </body>
     </html>
-  )
+  );
 }
