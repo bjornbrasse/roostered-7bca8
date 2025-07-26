@@ -1,16 +1,18 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Suspense } from "react";
-import type { Department } from "~/features/department/department-model.ts";
 
-export function DepartmentSchedules({
-  department,
-}: {
-  department: Pick<Department, "_id">;
-}) {
+export const Route = createFileRoute("/department_/$depId/schedules")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const { data: schedules } = useSuspenseQuery(
-    convexQuery(api.department.getSchedules, { departmentId: department._id }),
+    convexQuery(api.department.getSchedules, {
+      departmentId: Route.useParams().depId,
+    }),
   );
 
   return (

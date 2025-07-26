@@ -24,15 +24,19 @@ import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as SchedulesIdRouteImport } from './routes/schedules_.$id'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as OrganisationsOrgIdRouteImport } from './routes/organisations_.$orgId'
-import { Route as DepartmentsDepIdRouteImport } from './routes/departments_/$depId'
+import { Route as DepartmentDepIdRouteImport } from './routes/department_.$depId'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
 import { Route as SchedulesIdIndexRouteImport } from './routes/schedules_.$id/index'
 import { Route as SchedulesIdTasksRouteImport } from './routes/schedules_.$id/tasks'
 import { Route as SchedulesIdMembersRouteImport } from './routes/schedules_.$id/members'
 import { Route as SchedulesIdForwardsRouteImport } from './routes/schedules_.$id/forwards'
 import { Route as PostsPostIdDeepRouteImport } from './routes/posts_.$postId.deep'
+import { Route as DepartmentDepIdTasksRouteImport } from './routes/department_.$depId.tasks'
+import { Route as DepartmentDepIdSchedulesRouteImport } from './routes/department_.$depId.schedules'
+import { Route as DepartmentDepIdEmployeesRouteImport } from './routes/department_.$depId.employees'
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
+import { Route as OrgDepSdlRouteImport } from './routes/$org.$dep_.$sdl'
 import { Route as OrganisationsOrgIdDepartmentsDepIdRouteImport } from './routes/organisations_.$orgId/departments.$depId'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api.users'
 import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
@@ -103,9 +107,9 @@ const OrganisationsOrgIdRoute = OrganisationsOrgIdRouteImport.update({
   path: '/organisations/$orgId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DepartmentsDepIdRoute = DepartmentsDepIdRouteImport.update({
-  id: '/departments_/$depId',
-  path: '/departments/$depId',
+const DepartmentDepIdRoute = DepartmentDepIdRouteImport.update({
+  id: '/department_/$depId',
+  path: '/department/$depId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutNestedLayoutRoute =
@@ -138,6 +142,23 @@ const PostsPostIdDeepRoute = PostsPostIdDeepRouteImport.update({
   path: '/posts/$postId/deep',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DepartmentDepIdTasksRoute = DepartmentDepIdTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => DepartmentDepIdRoute,
+} as any)
+const DepartmentDepIdSchedulesRoute =
+  DepartmentDepIdSchedulesRouteImport.update({
+    id: '/schedules',
+    path: '/schedules',
+    getParentRoute: () => DepartmentDepIdRoute,
+  } as any)
+const DepartmentDepIdEmployeesRoute =
+  DepartmentDepIdEmployeesRouteImport.update({
+    id: '/employees',
+    path: '/employees',
+    getParentRoute: () => DepartmentDepIdRoute,
+  } as any)
 const PathlessLayoutNestedLayoutRouteBRoute =
   PathlessLayoutNestedLayoutRouteBRouteImport.update({
     id: '/route-b',
@@ -150,6 +171,11 @@ const PathlessLayoutNestedLayoutRouteARoute =
     path: '/route-a',
     getParentRoute: () => PathlessLayoutNestedLayoutRoute,
   } as any)
+const OrgDepSdlRoute = OrgDepSdlRouteImport.update({
+  id: '/$org/$dep_/$sdl',
+  path: '/$org/$dep/$sdl',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrganisationsOrgIdDepartmentsDepIdRoute =
   OrganisationsOrgIdDepartmentsDepIdRouteImport.update({
     id: '/departments/$depId',
@@ -174,15 +200,19 @@ export interface FileRoutesByFullPath {
   '/deferred': typeof DeferredRoute
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
-  '/departments/$depId': typeof DepartmentsDepIdRoute
+  '/department/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations/$orgId': typeof OrganisationsOrgIdRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/$org/$dep/$sdl': typeof OrgDepSdlRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/department/$depId/employees': typeof DepartmentDepIdEmployeesRoute
+  '/department/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
@@ -195,14 +225,18 @@ export interface FileRoutesByTo {
   '/deferred': typeof DeferredRoute
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
-  '/departments/$depId': typeof DepartmentsDepIdRoute
+  '/department/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations/$orgId': typeof OrganisationsOrgIdRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/posts': typeof PostsIndexRoute
   '/users': typeof UsersIndexRoute
+  '/$org/$dep/$sdl': typeof OrgDepSdlRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/department/$depId/employees': typeof DepartmentDepIdEmployeesRoute
+  '/department/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
@@ -220,15 +254,19 @@ export interface FileRoutesById {
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
-  '/departments_/$depId': typeof DepartmentsDepIdRoute
+  '/department_/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations_/$orgId': typeof OrganisationsOrgIdRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules_/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
+  '/$org/$dep_/$sdl': typeof OrgDepSdlRoute
   '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/department_/$depId/employees': typeof DepartmentDepIdEmployeesRoute
+  '/department_/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department_/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts_/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules_/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules_/$id/members': typeof SchedulesIdMembersRoute
@@ -245,15 +283,19 @@ export interface FileRouteTypes {
     | '/deferred'
     | '/organisations'
     | '/redirect'
-    | '/departments/$depId'
+    | '/department/$depId'
     | '/organisations/$orgId'
     | '/posts/$postId'
     | '/schedules/$id'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
+    | '/$org/$dep/$sdl'
     | '/route-a'
     | '/route-b'
+    | '/department/$depId/employees'
+    | '/department/$depId/schedules'
+    | '/department/$depId/tasks'
     | '/posts/$postId/deep'
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
@@ -266,14 +308,18 @@ export interface FileRouteTypes {
     | '/deferred'
     | '/organisations'
     | '/redirect'
-    | '/departments/$depId'
+    | '/department/$depId'
     | '/organisations/$orgId'
     | '/posts/$postId'
     | '/users/$userId'
     | '/posts'
     | '/users'
+    | '/$org/$dep/$sdl'
     | '/route-a'
     | '/route-b'
+    | '/department/$depId/employees'
+    | '/department/$depId/schedules'
+    | '/department/$depId/tasks'
     | '/posts/$postId/deep'
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
@@ -290,15 +336,19 @@ export interface FileRouteTypes {
     | '/organisations'
     | '/redirect'
     | '/_pathlessLayout/_nested-layout'
-    | '/departments_/$depId'
+    | '/department_/$depId'
     | '/organisations_/$orgId'
     | '/posts/$postId'
     | '/schedules_/$id'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
+    | '/$org/$dep_/$sdl'
     | '/_pathlessLayout/_nested-layout/route-a'
     | '/_pathlessLayout/_nested-layout/route-b'
+    | '/department_/$depId/employees'
+    | '/department_/$depId/schedules'
+    | '/department_/$depId/tasks'
     | '/posts_/$postId/deep'
     | '/schedules_/$id/forwards'
     | '/schedules_/$id/members'
@@ -315,9 +365,10 @@ export interface RootRouteChildren {
   DeferredRoute: typeof DeferredRoute
   OrganisationsRoute: typeof OrganisationsRoute
   RedirectRoute: typeof RedirectRoute
-  DepartmentsDepIdRoute: typeof DepartmentsDepIdRoute
+  DepartmentDepIdRoute: typeof DepartmentDepIdRouteWithChildren
   OrganisationsOrgIdRoute: typeof OrganisationsOrgIdRouteWithChildren
   SchedulesIdRoute: typeof SchedulesIdRouteWithChildren
+  OrgDepSdlRoute: typeof OrgDepSdlRoute
   PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
 }
 export interface FileServerRoutesByFullPath {
@@ -438,11 +489,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrganisationsOrgIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/departments_/$depId': {
-      id: '/departments_/$depId'
-      path: '/departments/$depId'
-      fullPath: '/departments/$depId'
-      preLoaderRoute: typeof DepartmentsDepIdRouteImport
+    '/department_/$depId': {
+      id: '/department_/$depId'
+      path: '/department/$depId'
+      fullPath: '/department/$depId'
+      preLoaderRoute: typeof DepartmentDepIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/_nested-layout': {
@@ -487,6 +538,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsPostIdDeepRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/department_/$depId/tasks': {
+      id: '/department_/$depId/tasks'
+      path: '/tasks'
+      fullPath: '/department/$depId/tasks'
+      preLoaderRoute: typeof DepartmentDepIdTasksRouteImport
+      parentRoute: typeof DepartmentDepIdRoute
+    }
+    '/department_/$depId/schedules': {
+      id: '/department_/$depId/schedules'
+      path: '/schedules'
+      fullPath: '/department/$depId/schedules'
+      preLoaderRoute: typeof DepartmentDepIdSchedulesRouteImport
+      parentRoute: typeof DepartmentDepIdRoute
+    }
+    '/department_/$depId/employees': {
+      id: '/department_/$depId/employees'
+      path: '/employees'
+      fullPath: '/department/$depId/employees'
+      preLoaderRoute: typeof DepartmentDepIdEmployeesRouteImport
+      parentRoute: typeof DepartmentDepIdRoute
+    }
     '/_pathlessLayout/_nested-layout/route-b': {
       id: '/_pathlessLayout/_nested-layout/route-b'
       path: '/route-b'
@@ -500,6 +572,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/route-a'
       preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteARouteImport
       parentRoute: typeof PathlessLayoutNestedLayoutRoute
+    }
+    '/$org/$dep_/$sdl': {
+      id: '/$org/$dep_/$sdl'
+      path: '/$org/$dep/$sdl'
+      fullPath: '/$org/$dep/$sdl'
+      preLoaderRoute: typeof OrgDepSdlRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/organisations_/$orgId/departments/$depId': {
       id: '/organisations_/$orgId/departments/$depId'
@@ -587,6 +666,22 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
   PathlessLayoutRouteChildren,
 )
 
+interface DepartmentDepIdRouteChildren {
+  DepartmentDepIdEmployeesRoute: typeof DepartmentDepIdEmployeesRoute
+  DepartmentDepIdSchedulesRoute: typeof DepartmentDepIdSchedulesRoute
+  DepartmentDepIdTasksRoute: typeof DepartmentDepIdTasksRoute
+}
+
+const DepartmentDepIdRouteChildren: DepartmentDepIdRouteChildren = {
+  DepartmentDepIdEmployeesRoute: DepartmentDepIdEmployeesRoute,
+  DepartmentDepIdSchedulesRoute: DepartmentDepIdSchedulesRoute,
+  DepartmentDepIdTasksRoute: DepartmentDepIdTasksRoute,
+}
+
+const DepartmentDepIdRouteWithChildren = DepartmentDepIdRoute._addFileChildren(
+  DepartmentDepIdRouteChildren,
+)
+
 interface OrganisationsOrgIdRouteChildren {
   OrganisationsOrgIdDepartmentsDepIdRoute: typeof OrganisationsOrgIdDepartmentsDepIdRoute
 }
@@ -637,9 +732,10 @@ const rootRouteChildren: RootRouteChildren = {
   DeferredRoute: DeferredRoute,
   OrganisationsRoute: OrganisationsRoute,
   RedirectRoute: RedirectRoute,
-  DepartmentsDepIdRoute: DepartmentsDepIdRoute,
+  DepartmentDepIdRoute: DepartmentDepIdRouteWithChildren,
   OrganisationsOrgIdRoute: OrganisationsOrgIdRouteWithChildren,
   SchedulesIdRoute: SchedulesIdRouteWithChildren,
+  OrgDepSdlRoute: OrgDepSdlRoute,
   PostsPostIdDeepRoute: PostsPostIdDeepRoute,
 }
 export const routeTree = rootRouteImport

@@ -3,8 +3,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { ScheduleDialog } from "~/features/schedule/components/schedule-dialog.tsx";
-import { ListEmployees } from "~/routes/departments_/-employees";
-import { DepartmentSchedules } from "~/routes/departments_/-schedules";
+import { ListEmployees } from "~/routes/departments_/department_.$depId.employees";
+import { DepartmentSchedules } from "~/routes/departments_/department_.$depId.schedules";
 
 export const Route = createFileRoute(
   "/organisations_/$orgId/departments/$depId",

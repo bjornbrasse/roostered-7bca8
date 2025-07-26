@@ -34,6 +34,7 @@ export const getById = query({
   args: { depId: v.string() },
   handler: async (ctx, args) => {
     const department = await ctx.db.get(args.depId as Id<"departments">);
+    if (!department) throw new ConvexError("Department not found");
     return department;
   },
 });
@@ -78,7 +79,13 @@ export const getEmployees = query({
         return await ctx.db.get(departmentEmployee.userId);
       }),
     );
-    return employees.filter((e): e is NonNullable<typeof e> => e !== null);
+    return employees
+      .filter((e): e is NonNullable<typeof e> => e !== null)
+      .map((employee) => ({
+        email: employee.email,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+      }));
   },
 });
 
