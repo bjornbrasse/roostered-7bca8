@@ -21,9 +21,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as PostsIndexRouteImport } from './routes/posts.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
+import { Route as SchedulesIdRouteImport } from './routes/schedules_.$id'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as OrganisationsIdRouteImport } from './routes/organisations_.$id'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
+import { Route as SchedulesIdTasksRouteImport } from './routes/schedules_.$id/tasks'
+import { Route as SchedulesIdMembersRouteImport } from './routes/schedules_.$id/members'
+import { Route as SchedulesIdForwardsRouteImport } from './routes/schedules_.$id/forwards'
 import { Route as PostsPostIdDeepRouteImport } from './routes/posts_.$postId.deep'
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
@@ -81,6 +85,11 @@ const UsersUserIdRoute = UsersUserIdRouteImport.update({
   path: '/$userId',
   getParentRoute: () => UsersRouteRoute,
 } as any)
+const SchedulesIdRoute = SchedulesIdRouteImport.update({
+  id: '/schedules_/$id',
+  path: '/schedules/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostsPostIdRoute = PostsPostIdRouteImport.update({
   id: '/$postId',
   path: '/$postId',
@@ -96,6 +105,21 @@ const PathlessLayoutNestedLayoutRoute =
     id: '/_nested-layout',
     getParentRoute: () => PathlessLayoutRoute,
   } as any)
+const SchedulesIdTasksRoute = SchedulesIdTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => SchedulesIdRoute,
+} as any)
+const SchedulesIdMembersRoute = SchedulesIdMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => SchedulesIdRoute,
+} as any)
+const SchedulesIdForwardsRoute = SchedulesIdForwardsRouteImport.update({
+  id: '/forwards',
+  path: '/forwards',
+  getParentRoute: () => SchedulesIdRoute,
+} as any)
 const PostsPostIdDeepRoute = PostsPostIdDeepRouteImport.update({
   id: '/posts_/$postId/deep',
   path: '/posts/$postId/deep',
@@ -133,12 +157,16 @@ export interface FileRoutesByFullPath {
   '/redirect': typeof RedirectRoute
   '/organisations/$id': typeof OrganisationsIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/schedules/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
+  '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
+  '/schedules/$id/members': typeof SchedulesIdMembersRoute
+  '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -147,12 +175,16 @@ export interface FileRoutesByTo {
   '/redirect': typeof RedirectRoute
   '/organisations/$id': typeof OrganisationsIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/schedules/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts': typeof PostsIndexRoute
   '/users': typeof UsersIndexRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
+  '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
+  '/schedules/$id/members': typeof SchedulesIdMembersRoute
+  '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -166,12 +198,16 @@ export interface FileRoutesById {
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/organisations_/$id': typeof OrganisationsIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/schedules_/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
   '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/posts_/$postId/deep': typeof PostsPostIdDeepRoute
+  '/schedules_/$id/forwards': typeof SchedulesIdForwardsRoute
+  '/schedules_/$id/members': typeof SchedulesIdMembersRoute
+  '/schedules_/$id/tasks': typeof SchedulesIdTasksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -184,12 +220,16 @@ export interface FileRouteTypes {
     | '/redirect'
     | '/organisations/$id'
     | '/posts/$postId'
+    | '/schedules/$id'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
     | '/route-a'
     | '/route-b'
     | '/posts/$postId/deep'
+    | '/schedules/$id/forwards'
+    | '/schedules/$id/members'
+    | '/schedules/$id/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -198,12 +238,16 @@ export interface FileRouteTypes {
     | '/redirect'
     | '/organisations/$id'
     | '/posts/$postId'
+    | '/schedules/$id'
     | '/users/$userId'
     | '/posts'
     | '/users'
     | '/route-a'
     | '/route-b'
     | '/posts/$postId/deep'
+    | '/schedules/$id/forwards'
+    | '/schedules/$id/members'
+    | '/schedules/$id/tasks'
   id:
     | '__root__'
     | '/'
@@ -216,12 +260,16 @@ export interface FileRouteTypes {
     | '/_pathlessLayout/_nested-layout'
     | '/organisations_/$id'
     | '/posts/$postId'
+    | '/schedules_/$id'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
     | '/_pathlessLayout/_nested-layout/route-a'
     | '/_pathlessLayout/_nested-layout/route-b'
     | '/posts_/$postId/deep'
+    | '/schedules_/$id/forwards'
+    | '/schedules_/$id/members'
+    | '/schedules_/$id/tasks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,6 +281,7 @@ export interface RootRouteChildren {
   OrganisationsRoute: typeof OrganisationsRoute
   RedirectRoute: typeof RedirectRoute
   OrganisationsIdRoute: typeof OrganisationsIdRoute
+  SchedulesIdRoute: typeof SchedulesIdRouteWithChildren
   PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
 }
 export interface FileServerRoutesByFullPath {
@@ -332,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersUserIdRouteImport
       parentRoute: typeof UsersRouteRoute
     }
+    '/schedules_/$id': {
+      id: '/schedules_/$id'
+      path: '/schedules/$id'
+      fullPath: '/schedules/$id'
+      preLoaderRoute: typeof SchedulesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/posts/$postId': {
       id: '/posts/$postId'
       path: '/$postId'
@@ -352,6 +408,27 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteImport
       parentRoute: typeof PathlessLayoutRoute
+    }
+    '/schedules_/$id/tasks': {
+      id: '/schedules_/$id/tasks'
+      path: '/tasks'
+      fullPath: '/schedules/$id/tasks'
+      preLoaderRoute: typeof SchedulesIdTasksRouteImport
+      parentRoute: typeof SchedulesIdRoute
+    }
+    '/schedules_/$id/members': {
+      id: '/schedules_/$id/members'
+      path: '/members'
+      fullPath: '/schedules/$id/members'
+      preLoaderRoute: typeof SchedulesIdMembersRouteImport
+      parentRoute: typeof SchedulesIdRoute
+    }
+    '/schedules_/$id/forwards': {
+      id: '/schedules_/$id/forwards'
+      path: '/forwards'
+      fullPath: '/schedules/$id/forwards'
+      preLoaderRoute: typeof SchedulesIdForwardsRouteImport
+      parentRoute: typeof SchedulesIdRoute
     }
     '/posts_/$postId/deep': {
       id: '/posts_/$postId/deep'
@@ -453,6 +530,22 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
   PathlessLayoutRouteChildren,
 )
 
+interface SchedulesIdRouteChildren {
+  SchedulesIdForwardsRoute: typeof SchedulesIdForwardsRoute
+  SchedulesIdMembersRoute: typeof SchedulesIdMembersRoute
+  SchedulesIdTasksRoute: typeof SchedulesIdTasksRoute
+}
+
+const SchedulesIdRouteChildren: SchedulesIdRouteChildren = {
+  SchedulesIdForwardsRoute: SchedulesIdForwardsRoute,
+  SchedulesIdMembersRoute: SchedulesIdMembersRoute,
+  SchedulesIdTasksRoute: SchedulesIdTasksRoute,
+}
+
+const SchedulesIdRouteWithChildren = SchedulesIdRoute._addFileChildren(
+  SchedulesIdRouteChildren,
+)
+
 interface ApiUsersServerRouteChildren {
   ApiUsersIdServerRoute: typeof ApiUsersIdServerRoute
 }
@@ -474,6 +567,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrganisationsRoute: OrganisationsRoute,
   RedirectRoute: RedirectRoute,
   OrganisationsIdRoute: OrganisationsIdRoute,
+  SchedulesIdRoute: SchedulesIdRouteWithChildren,
   PostsPostIdDeepRoute: PostsPostIdDeepRoute,
 }
 export const routeTree = rootRouteImport

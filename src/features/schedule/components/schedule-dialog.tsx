@@ -1,60 +1,55 @@
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { getZodConstraint } from "@conform-to/zod";
-import { useConvexMutation } from "@convex-dev/react-query";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { useMutation } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
+import { useMutation } from "convex/react";
 import type React from "react";
-import z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "~/components/ui/dialog.tsx";
-import type { Organisation } from "~/features/organisation/organisation-model";
+import type { Department } from "~/features/department/department-model.ts";
+import { scheduleInputSchema } from "~/features/schedule/schedule-model";
 
-export function DepartmentDialog({
+export function ScheduleDialog({
   button,
-  organisation,
+  department,
 }: {
   button: React.ReactNode;
-  organisation: Pick<Organisation, "_id">;
+  department: Pick<Department, "_id">;
 }) {
-  const { mutate } = useMutation({
-    mutationFn: useConvexMutation(api.department.create),
-  });
+  const createSchedule = useMutation(api.schedule.create);
 
   const [form, fields] = useForm({
     constraint: getZodConstraint(
-      z.object({
-        name: z.string().min(1, "Naam is verplicht"),
-        slug: z.string().min(1, "Slug is verplicht"),
+      scheduleInputSchema.omit({
+        departmentId: true,
       }),
     ),
-    defaultValue: { name: "", slug: "" },
-    onSubmit(e, { submission }) {
+    defaultValue: {
+      name: "",
+      slug: "",
+    },
+    onSubmit: async (e, { submission }) => {
       e.preventDefault();
-      if (!submission || submission.status !== "success") return;
-      mutate({
+      if (submission?.status !== "success") return;
+      await createSchedule({
         ...submission.value,
-        organisationId: organisation._id,
+        departmentId: department._id as Id<"departments">,
       });
-      form.reset();
     },
   });
-
   return (
     <Dialog>
       <DialogTrigger asChild>{button}</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Maak nieuwe afdeling</DialogTitle>
-        <form {...getFormProps(form)}>
+        <form {...getFormProps(form)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-4">
             <label>
               Naam:
               <input
                 {...getInputProps(fields.name, { type: "text" })}
-                aria-describedby="name-error"
                 className="w-full rounded border p-2"
               />
             </label>
@@ -62,13 +57,12 @@ export function DepartmentDialog({
               Slug:
               <input
                 {...getInputProps(fields.slug, { type: "text" })}
-                aria-describedby="slug-error"
                 className="w-full rounded border p-2"
               />
             </label>
           </div>
           <button type="submit" className="btn btn-primary mt-4">
-            Opslaan
+            Save
           </button>
         </form>
       </DialogContent>

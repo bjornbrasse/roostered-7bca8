@@ -1,45 +1,45 @@
-import { convexQuery } from '@convex-dev/react-query'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
-import { api } from 'convex/_generated/api'
-import { useQuery } from 'convex/react'
-import { CrossIcon } from 'lucide-react'
-import { DepartmentDialog } from '~/features/organisation/components/department-dialog.tsx'
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { api } from "convex/_generated/api";
+import { CrossIcon } from "lucide-react";
+import { DepartmentDialog } from "~/features/organisation/components/department-dialog.tsx";
 
-export const Route = createFileRoute('/organisations_/$id')({
+export const Route = createFileRoute("/organisations_/$id")({
   component: RouteComponent,
   loader: async (opts) => {
     const organisation = opts.context.queryClient.prefetchQuery(
       convexQuery(api.organisation.getById, {
         organisationId: opts.params.id,
       }),
-    )
-    return { organisation }
+    );
+    return { organisation };
   },
-})
+});
 
 function RouteComponent() {
   const { data: organisation } = useSuspenseQuery(
     convexQuery(api.organisation.getById, {
       organisationId: Route.useParams().id,
     }),
-  )
-
-  const { id: organisationId } = Route.useParams()
+  );
 
   return (
-    <div className="flex flex-col p-12 h-full gap-4">
+    <div className="flex h-full flex-col gap-4 p-12">
       <div className="flex">
         <h1>{organisation?.name}</h1>
       </div>
-      <div className="flex gap-8 flex-1">
-        <div className="w-1/4 bg-gray-200 p-2 rounded-md">
-          <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-1 gap-8">
+        <div className="w-1/4 rounded-md bg-gray-200 p-2">
+          <div className="mb-4 flex items-center justify-between">
             <h2>Afdelingen</h2>
             {organisation && (
               <DepartmentDialog
                 button={
-                  <button className="rounded-full border border-gray-600 text-gray-600 flex items-center justify-center size-8">
+                  <button
+                    type="button"
+                    className="flex size-8 items-center justify-center rounded-full border border-gray-600 text-gray-600"
+                  >
                     <CrossIcon size={16} />
                   </button>
                 }
@@ -65,5 +65,5 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }

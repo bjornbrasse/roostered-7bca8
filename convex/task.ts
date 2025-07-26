@@ -1,34 +1,34 @@
-import type { Id } from './_generated/dataModel.js'
-import { mutation, query, type QueryCtx } from './_generated/server.js'
-import { getScheduleBySlugs } from './schedule.js'
-import { ConvexError, v } from 'convex/values'
+import { v } from "convex/values";
+import type { Id } from "./_generated/dataModel.js";
+import { mutation, type QueryCtx, query } from "./_generated/server.js";
 
 const createTaskInput = {
-	daysOfTheWeek: v.optional(v.string()), // "0111110"
-	departmentId: v.id('departments'),
-	description: v.optional(v.string()),
-	hoursPerDay: v.optional(v.number()),
-	name: v.string(),
-	nameShort: v.string(),
-	styles: v.optional(
-		v.object({
-			backgroundColor: v.optional(v.string()),
-		}),
-	),
-}
+  // daysOfTheWeek: v.optional(v.string()), // "0111110"
+  departmentId: v.id("departments"),
+  description: v.optional(v.string()),
+  // hoursPerDay: v.optional(v.number()),
+  name: v.string(),
+  nameShort: v.string(),
+  styles: v.optional(
+    v.object({
+      backgroundColor: v.optional(v.string()),
+    }),
+  ),
+};
 
 export const taskObject = {
-	...createTaskInput,
-	authorId: v.optional(v.string()),
-	updatedAt: v.optional(v.float64())
-}
+  ...createTaskInput,
+  scheduleId: v.optional(v.id("schedules")),
+  authorId: v.optional(v.string()),
+  updatedAt: v.optional(v.float64()),
+};
 
 export const departmentTasks = query({
-	args: { departmentId: v.id('departments') },
-	handler: async (ctx, args) => {
-		return await getDepartmentTasks(ctx, args.departmentId)
-	},
-})
+  args: { departmentId: v.id("departments") },
+  handler: async (ctx, args) => {
+    return await getDepartmentTasks(ctx, args.departmentId);
+  },
+});
 
 // export const getDepartmentTasksNotInSchedule = query({
 //   args: {
@@ -66,21 +66,21 @@ export const departmentTasks = query({
 // MUTATIONS
 
 export const create = mutation({
-	args: createTaskInput,
-	handler: async (ctx, args) => {
-		return ctx.db.insert('tasks', {
-			...args,
-			authorId: 'k573cfjyxs8a7g7skx75dnzfj976f8zm',
-			updatedAt: new Date().getTime(),
-		})
-	},
-})
+  args: { ...createTaskInput, scheduleId: v.optional(v.id("schedules")) },
+  handler: async (ctx, args) => {
+    return ctx.db.insert("tasks", {
+      ...args,
+      authorId: "k573cfjyxs8a7g7skx75dnzfj976f8zm",
+      updatedAt: new Date().getTime(),
+    });
+  },
+});
 
 // HELPERS
 
-function getDepartmentTasks(ctx: QueryCtx, departmentId: Id<'departments'>) {
-	return ctx.db
-		.query('tasks')
-		.withIndex('by_departmentId', (q) => q.eq('departmentId', departmentId))
-		.collect()
+function getDepartmentTasks(ctx: QueryCtx, departmentId: Id<"departments">) {
+  return ctx.db
+    .query("tasks")
+    .withIndex("by_departmentId", (q) => q.eq("departmentId", departmentId))
+    .collect();
 }

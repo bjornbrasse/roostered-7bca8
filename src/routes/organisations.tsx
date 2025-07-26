@@ -1,21 +1,21 @@
-import { convexQuery } from '@convex-dev/react-query'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
-import { api } from 'convex/_generated/api'
-import { OrganisationDialog } from '~/features/organisation/components/organisation-dialog.tsx'
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { api } from "convex/_generated/api";
+import { OrganisationDialog } from "~/features/organisation/components/organisation-dialog.tsx";
 
-export const Route = createFileRoute('/organisations')({
+export const Route = createFileRoute("/organisations")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const { data: organisations } = useSuspenseQuery(
     convexQuery(api.organisation.getAll, {}),
-  )
+  );
 
   return (
-    <div className="h-full flex flex-col gap-4 p-12">
-      <div className="flex justify-between items-center">
+    <div className="flex h-full flex-col gap-4 p-12">
+      <div className="flex items-center justify-between">
         <h1>Organisaties</h1>
         <OrganisationDialog button={<button>Nieuwe Organisatie</button>} />
       </div>
@@ -25,9 +25,9 @@ function RouteComponent() {
             to="/organisations/$id"
             params={{ id: organisation._id }}
             key={organisation._id}
-            className="flex aspect-square border border-gray-400 rounded-md overflow-hidden"
+            className="flex aspect-square overflow-hidden rounded-md border border-gray-400"
           >
-            <div className="bg-gray-100 w-full border-t border-gray-200 place-self-end p-2 h-16">
+            <div className="h-16 w-full place-self-end border-gray-200 border-t bg-gray-100 p-2">
               <p className="text-sm">{organisation.name}</p>
             </div>
           </Link>
@@ -37,5 +37,5 @@ function RouteComponent() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

@@ -1,1 +1,0 @@
-import{R as n,d as t,j as s}from"./main-VyRsR0rF.js";import{u as o}from"./useSuspenseQuery-DWt-qX43.js";const i=function(){const r=n.useParams(),e=o(t(r.userId)).data;return s.jsxs("div",{className:"space-y-2",children:[s.jsx("h4",{className:"text-xl font-bold underline",children:e.name}),s.jsx("div",{className:"text-sm",children:e.email})]})};export{i as component};

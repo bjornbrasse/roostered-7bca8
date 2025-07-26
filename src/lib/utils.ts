@@ -1,18 +1,17 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export async function asyncMap<T, U>(
-	iterable: Iterable<T>,
-	asyncTransform: (item: T) => Promise<U>,
+  iterable: Iterable<T>,
+  asyncTransform: (item: T) => Promise<U>,
 ) {
-	const promises = []
-	for (const item of iterable) {
-		promises.push(asyncTransform(item))
-	}
-	return Promise.all(promises)
+  const promises = [];
+  for (const item of iterable) {
+    promises.push(asyncTransform(item));
+  }
+  return Promise.all(promises);
 }
-
