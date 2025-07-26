@@ -1,6 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { CrossIcon } from "lucide-react";
 import { DepartmentDialog } from "~/features/organisation/components/department-dialog.tsx";
@@ -23,6 +23,8 @@ function RouteComponent() {
       organisationId: Route.useParams().id,
     }),
   );
+
+  const organisationId = Route.useParams().id;
 
   return (
     <div className="flex h-full flex-col gap-4 p-12">
@@ -47,18 +49,19 @@ function RouteComponent() {
               />
             )}
           </div>
-          {/* <ul className="no-list">
+          <ul className="no-list">
             {organisation?.departments.map((department) => (
               <Link
-                to="/organisations/$id/departments/$depId"
+                to="/"
                 params={{ id: organisationId, depId: department._id }}
-                activeProps={{ className: 'bg-gray-300' }}
-                className="block p-2 rounded-md"
+                activeProps={{ className: "bg-gray-300" }}
+                className="block rounded-md p-2"
+                key={department._id}
               >
                 {department.name}
               </Link>
             ))}
-          </ul> */}
+          </ul>
         </div>
         <div className="flex-1">
           <Outlet />

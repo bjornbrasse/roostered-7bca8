@@ -6,8 +6,10 @@ import {
   type QueryCtx,
   query,
 } from "./_generated/server.js";
-import { getDepartmentBySlugs } from "./department.js";
-import { getOrganisationBySlug } from "./organisation.js";
+import { departmentGetBySlug } from "./department.js";
+import { organisationGetBySlug } from "./organisation.js";
+// import { getDepartmentBySlugs } from "./department.js";
+// import { getOrganisationBySlug } from "./organisation.js";
 
 export const scheduleObject = {
   departmentId: v.id("departments"),
@@ -24,26 +26,9 @@ export const scheduleSlugs = {
 // QUERIES
 
 export const get = query({
-  args: {
-    organisationSlug: v.string(),
-    departmentSlug: v.string(),
-    scheduleSlug: v.string(),
-  },
+  args: scheduleSlugs,
   handler: async (ctx, args) => {
-    const department = await getDepartmentBySlugs(ctx, {
-      organisationSlug: args.organisationSlug,
-      departmentSlug: args.departmentSlug,
-    });
-    if (!department) throw new ConvexError("Department not found!");
-    return await ctx.db
-      .query("schedules")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("slug"), args.scheduleSlug),
-          q.eq(q.field("departmentId"), department._id),
-        ),
-      )
-      .first();
+    return await scheduleGetBySlugs(ctx, args);
   },
 });
 
@@ -63,7 +48,9 @@ export const listTasks = query({
   handler: async (ctx, args) => {
     const tasks = await ctx.db
       .query("tasks")
-      .withIndex("by_scheduleId", (q) => q.eq("scheduleId", args.scheduleId as Id<"schedules">))
+      .withIndex("by_scheduleId", (q) =>
+        q.eq("scheduleId", args.scheduleId as Id<"schedules">),
+      )
       .collect();
     return tasks;
   },
@@ -72,19 +59,10 @@ export const listTasks = query({
 export const findFirst = query({
   args: scheduleSlugs,
   handler: async (ctx, args) => {
-    const department = await getDepartmentBySlugs(ctx, { ...args });
-    if (!department) throw new ConvexError("Department not found");
-    const schedule = await ctx.db
-      .query("schedules")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("slug"), args.scheduleSlug),
-          q.eq(q.field("departmentId"), department._id),
-        ),
-      )
-      .first();
-    if (!schedule) throw new ConvexError("Schedule not found");
+    const schedule = await scheduleGetBySlugs(ctx, args);
+    if (!schedule) return null;
 
+    const department = await ctx.db.get(schedule.departmentId);
     // const scheduleTasks = await getScheduleTasks(ctx, schedule._id)
     // const scheduleMembers = await getScheduleMembers(
     // 	ctx,
@@ -118,7 +96,7 @@ export const create = mutation({
 
 // HELPERS
 
-export async function getScheduleBySlugs(
+export async function scheduleGetBySlugs(
   ctx: QueryCtx | MutationCtx,
   args: {
     organisationSlug: string;
@@ -126,17 +104,19 @@ export async function getScheduleBySlugs(
     scheduleSlug: string;
   },
 ) {
-  const organisation = await getOrganisationBySlug(ctx, args.organisationSlug);
+  const organisation = await organisationGetBySlug(ctx, {
+    slug: args.organisationSlug,
+  });
   if (!organisation) return null;
-  const department = await getDepartmentBySlugs(ctx, args);
+  const department = await departmentGetBySlug(ctx, {
+    slug: args.departmentSlug,
+    organisationId: organisation._id,
+  });
   if (!department) return null;
   return await ctx.db
     .query("schedules")
-    .filter((q) =>
-      q.and(
-        q.eq(q.field("slug"), args.scheduleSlug),
-        q.eq(q.field("departmentId"), department._id),
-      ),
+    .withIndex("by_slug_and_departmentId", (q) =>
+      q.eq("slug", args.scheduleSlug).eq("departmentId", department._id),
     )
     .first();
 }

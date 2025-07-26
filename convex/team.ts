@@ -45,6 +45,7 @@ export const createMember = mutation({
         firstName: args.user.firstName,
         lastName: args.user.lastName,
         email: args.user.email,
+        organisationId: "123" as Id<"organisations">, // Replace with actual organisation ID
       });
     }
     if (!userId) throw new ConvexError("User creation failed");

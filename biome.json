@@ -29,7 +29,7 @@
           "options": {}
         },
         "noUnusedVariables": {
-          "fix": "safe",
+          "fix": "unsafe",
           "level": "warn",
           "options": {}
         }

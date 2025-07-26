@@ -1,4 +1,6 @@
 import { ConvexError, v } from "convex/values";
+import z from "zod";
+import { userInputSchema } from "../src/features/user/user-model.ts";
 import type { Id } from "./_generated/dataModel.js";
 import {
   type MutationCtx,
@@ -6,7 +8,8 @@ import {
   type QueryCtx,
   query,
 } from "./_generated/server.js";
-import { getOrganisationBySlug } from "./organisation.js";
+import { organisationGetById } from "./organisation.ts";
+import { zMutation } from "./utils.js";
 
 export const departmentObject = {
   name: v.string(),
@@ -27,40 +30,57 @@ export const listByOrganisationId = query({
   },
 });
 
-export const findBySlugs = query({
-  args: { organisationSlug: v.string(), departmentSlug: v.string() },
+export const getById = query({
+  args: { id: v.string() },
   handler: async (ctx, args) => {
-    const department = await getDepartmentBySlugs(ctx, args);
-    if (!department) throw new ConvexError("Department not found");
-    const schedules = await ctx.db
-      .query("schedules")
-      .filter((q) => q.eq(q.field("departmentId"), department._id))
-      .collect();
-
-    // const departmentEmployees = await getDepartmentEmployees(
-    // 	ctx,
-    // 	department._id,
-    // )
-
-    const tasks = await ctx.db
-      .query("tasks")
-      .filter((q) => q.eq(q.field("departmentId"), department._id))
-      .collect();
-
-    // return { ...department, departmentEmployees, schedules, tasks }
-    return { ...department, schedules, tasks };
+    const department = await ctx.db.get(args.id as Id<"departments">);
+    return department;
   },
 });
 
-// export const getEmployees = query({
-// 	args: { departmentSlug: v.string(), organisationSlug: v.string() },
-// 	handler: async (ctx, args) => {
-// 		const department = await getDepartmentBySlugs(ctx, args)
-// 		if (!department) throw new ConvexError('Department not found')
+// export const findBySlugs = query({
+//   args: { organisationSlug: v.string(), departmentSlug: v.string() },
+//   handler: async (ctx, args) => {
+//     const department = await getDepartmentBySlugs(ctx, args);
+//     if (!department) throw new ConvexError("Department not found");
+//     const schedules = await ctx.db
+//       .query("schedules")
+//       .filter((q) => q.eq(q.field("departmentId"), department._id))
+//       .collect();
 
-// 		return await getDepartmentEmployees(ctx, department._id)
-// 	},
-// })
+//     // const departmentEmployees = await getDepartmentEmployees(
+//     // 	ctx,
+//     // 	department._id,
+//     // )
+
+//     const tasks = await ctx.db
+//       .query("tasks")
+//       .filter((q) => q.eq(q.field("departmentId"), department._id))
+//       .collect();
+
+//     // return { ...department, departmentEmployees, schedules, tasks }
+//     return { ...department, schedules, tasks };
+//   },
+// });
+
+export const getEmployees = query({
+  args: { departmentId: v.string() },
+  handler: async (ctx, args) => {
+    const department = await ctx.db.get(args.departmentId as Id<"departments">);
+    if (!department) throw new ConvexError("Department not found");
+    const departmentEmployees = await ctx.db
+      .query("departmentEmployees")
+      .withIndex("by_departmentId")
+      .filter((q) => q.eq(q.field("departmentId"), department._id))
+      .collect();
+    const employees = await Promise.all(
+      departmentEmployees.map(async (departmentEmployee) => {
+        return await ctx.db.get(departmentEmployee.userId);
+      }),
+    );
+    return employees.filter((e): e is NonNullable<typeof e> => e !== null);
+  },
+});
 
 // MUTATIONS
 
@@ -78,24 +98,45 @@ export const create = mutation({
   },
 });
 
+export const addEmployee = zMutation({
+  args: userInputSchema.omit({ organisationId: true }).extend({
+    departmentId: z.string().cuid2(),
+  }),
+  handler: async (ctx, args) => {
+    const department = await ctx.db.get(args.departmentId as Id<"departments">);
+    if (!department) throw new ConvexError("Department not found");
+
+    // Add later: check if user with email already exists
+
+    const userId = await ctx.db.insert("users", {
+      ...args,
+      organisationId: department.organisationId,
+    });
+
+    await ctx.db.insert("departmentEmployees", {
+      userId: userId,
+      departmentId: department._id,
+    });
+  },
+});
+
 // HELPERS
 
-export async function getDepartmentBySlugs(
+export async function departmentGetBySlug(
   ctx: QueryCtx | MutationCtx,
-  slugs: { departmentSlug: string; organisationSlug: string },
+  args: { slug: string; organisationId: string },
 ) {
-  const organisation = await getOrganisationBySlug(ctx, slugs.organisationSlug);
+  const organisation = await organisationGetById(ctx, args);
   if (!organisation) throw new ConvexError("Organisation not found");
-  const department = await ctx.db
+  return await ctx.db
     .query("departments")
     .filter((q) =>
       q.and(
         q.eq(q.field("organisationId"), organisation._id),
-        q.eq(q.field("slug"), slugs.departmentSlug),
+        q.eq(q.field("slug"), args.slug),
       ),
     )
     .unique();
-  return department;
 }
 
 // export async function getDepartmentEmployees(

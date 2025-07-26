@@ -6,12 +6,22 @@ import { organisationObject } from "./organisation.js";
 import { scheduleObject } from "./schedule.js";
 import { sessionObject } from "./session.js";
 import { taskObject } from "./task.js";
+import { userObject } from "./user.js";
 
 export default defineSchema({
   assignments: defineTable(assignmentObject).index("by_taskId", ["taskId"]),
-  departments: defineTable(departmentObject),
-  organisations: defineTable(organisationObject),
-  schedules: defineTable(scheduleObject),
+  departments: defineTable(departmentObject).index("by_organisationId", [
+    "organisationId",
+  ]),
+  departmentEmployees: defineTable({
+    userId: v.id("users"),
+    departmentId: v.id("departments"),
+  }).index("by_departmentId", ["departmentId"]),
+  organisations: defineTable(organisationObject).index("by_slug", ["slug"]),
+  schedules: defineTable(scheduleObject).index("by_slug_and_departmentId", [
+    "slug",
+    "departmentId",
+  ]),
   sessions: defineTable(sessionObject),
   tasks: defineTable(taskObject)
     .index("by_departmentId", ["departmentId"])
@@ -21,9 +31,5 @@ export default defineSchema({
     teamId: v.id("teams"),
     userId: v.id("users"),
   }),
-  users: defineTable({
-    firstName: v.string(),
-    lastName: v.string(),
-    email: v.string(),
-  }).index("by_email", ["email"]),
+  users: defineTable(userObject).index("by_email", ["email"]),
 });

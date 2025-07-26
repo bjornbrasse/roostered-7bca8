@@ -21,6 +21,7 @@ import type * as session from "../session.js";
 import type * as task from "../task.js";
 import type * as team from "../team.js";
 import type * as user from "../user.js";
+import type * as utils from "../utils.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   task: typeof task;
   team: typeof team;
   user: typeof user;
+  utils: typeof utils;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
