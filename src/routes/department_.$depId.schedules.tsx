@@ -23,7 +23,7 @@ function RouteComponent() {
 
   return (
     <Suspense fallback={<div>Loading schedules...</div>}>
-      <div className="pl-8">
+      <div className="">
         {schedules.map(({ org, dep, slug: sdl, ...schedule }) => (
           <Link
             to="/$org/$dep/$sdl"

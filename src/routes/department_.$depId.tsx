@@ -46,12 +46,15 @@ function RouteComponent() {
         <h1>{department.name}</h1>
       </div>
       <div className="flex flex-1">
-        <div className="flex w-1/4 flex-col gap-4 border-gray-500 border-r pr-8">
+        <div className="flex w-1/4 flex-col border-gray-200 border-r pr-8">
           <TabButton to="/department/$depId/employees">Medewerkers</TabButton>
           <TabButton to="/department/$depId/tasks">Taken</TabButton>
           <TabButton to="/department/$depId/schedules">Roosters</TabButton>
+          <TabButton to="/department/$depId/special-dates">
+            Bijzondere data
+          </TabButton>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 pl-8">
           <Outlet />
         </div>
       </div>
@@ -61,9 +64,15 @@ function RouteComponent() {
 
 function TabButton({ className, ...props }: LinkComponentProps) {
   return (
-    <Link
-      {...props}
-      className={cn("rounded-sm border border-gray-100 p-4", className)}
-    />
+    <div className="border-gray-200 border-b last:border-0">
+      <Link
+        {...props}
+        className={cn("my-2 block rounded-sm px-4 py-3", className)}
+        activeProps={{
+          className: "bg-sky-100 shadow-sm border border-gray-200",
+        }}
+        inactiveProps={{ className: "hover:bg-gray-100" }}
+      />
+    </div>
   );
 }

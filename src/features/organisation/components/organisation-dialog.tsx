@@ -12,8 +12,8 @@ import {
 import { organisationInputSchema } from "../organisation-model.ts";
 
 export function OrganisationDialog({ button }: { button: React.ReactNode }) {
-  const _createOrganisation = useMutation(api.organisation.create);
-  const _navigate = useNavigate();
+  const createOrganisation = useMutation(api.organisation.create);
+  const navigate = useNavigate();
 
   const [form, fields] = useForm({
     id: "organisation-form",

@@ -32,6 +32,7 @@ import { Route as SchedulesIdMembersRouteImport } from './routes/schedules_.$id/
 import { Route as SchedulesIdForwardsRouteImport } from './routes/schedules_.$id/forwards'
 import { Route as PostsPostIdDeepRouteImport } from './routes/posts_.$postId.deep'
 import { Route as DepartmentDepIdTasksRouteImport } from './routes/department_.$depId.tasks'
+import { Route as DepartmentDepIdSpecialDatesRouteImport } from './routes/department_.$depId.special-dates'
 import { Route as DepartmentDepIdSchedulesRouteImport } from './routes/department_.$depId.schedules'
 import { Route as DepartmentDepIdEmployeesRouteImport } from './routes/department_.$depId.employees'
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
@@ -146,6 +147,12 @@ const DepartmentDepIdTasksRoute = DepartmentDepIdTasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => DepartmentDepIdRoute,
 } as any)
+const DepartmentDepIdSpecialDatesRoute =
+  DepartmentDepIdSpecialDatesRouteImport.update({
+    id: '/special-dates',
+    path: '/special-dates',
+    getParentRoute: () => DepartmentDepIdRoute,
+  } as any)
 const DepartmentDepIdSchedulesRoute =
   DepartmentDepIdSchedulesRouteImport.update({
     id: '/schedules',
@@ -205,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/department/$depId/employees': typeof DepartmentDepIdEmployeesRoute
   '/department/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department/$depId/special-dates': typeof DepartmentDepIdSpecialDatesRoute
   '/department/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
@@ -228,6 +236,7 @@ export interface FileRoutesByTo {
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/department/$depId/employees': typeof DepartmentDepIdEmployeesRoute
   '/department/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department/$depId/special-dates': typeof DepartmentDepIdSpecialDatesRoute
   '/department/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
@@ -257,6 +266,7 @@ export interface FileRoutesById {
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/department_/$depId/employees': typeof DepartmentDepIdEmployeesRoute
   '/department_/$depId/schedules': typeof DepartmentDepIdSchedulesRoute
+  '/department_/$depId/special-dates': typeof DepartmentDepIdSpecialDatesRoute
   '/department_/$depId/tasks': typeof DepartmentDepIdTasksRoute
   '/posts_/$postId/deep': typeof PostsPostIdDeepRoute
   '/schedules_/$id/forwards': typeof SchedulesIdForwardsRoute
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/route-b'
     | '/department/$depId/employees'
     | '/department/$depId/schedules'
+    | '/department/$depId/special-dates'
     | '/department/$depId/tasks'
     | '/posts/$postId/deep'
     | '/schedules/$id/forwards'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/route-b'
     | '/department/$depId/employees'
     | '/department/$depId/schedules'
+    | '/department/$depId/special-dates'
     | '/department/$depId/tasks'
     | '/posts/$postId/deep'
     | '/schedules/$id/forwards'
@@ -336,6 +348,7 @@ export interface FileRouteTypes {
     | '/_pathlessLayout/_nested-layout/route-b'
     | '/department_/$depId/employees'
     | '/department_/$depId/schedules'
+    | '/department_/$depId/special-dates'
     | '/department_/$depId/tasks'
     | '/posts_/$postId/deep'
     | '/schedules_/$id/forwards'
@@ -532,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentDepIdTasksRouteImport
       parentRoute: typeof DepartmentDepIdRoute
     }
+    '/department_/$depId/special-dates': {
+      id: '/department_/$depId/special-dates'
+      path: '/special-dates'
+      fullPath: '/department/$depId/special-dates'
+      preLoaderRoute: typeof DepartmentDepIdSpecialDatesRouteImport
+      parentRoute: typeof DepartmentDepIdRoute
+    }
     '/department_/$depId/schedules': {
       id: '/department_/$depId/schedules'
       path: '/schedules'
@@ -649,12 +669,14 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
 interface DepartmentDepIdRouteChildren {
   DepartmentDepIdEmployeesRoute: typeof DepartmentDepIdEmployeesRoute
   DepartmentDepIdSchedulesRoute: typeof DepartmentDepIdSchedulesRoute
+  DepartmentDepIdSpecialDatesRoute: typeof DepartmentDepIdSpecialDatesRoute
   DepartmentDepIdTasksRoute: typeof DepartmentDepIdTasksRoute
 }
 
 const DepartmentDepIdRouteChildren: DepartmentDepIdRouteChildren = {
   DepartmentDepIdEmployeesRoute: DepartmentDepIdEmployeesRoute,
   DepartmentDepIdSchedulesRoute: DepartmentDepIdSchedulesRoute,
+  DepartmentDepIdSpecialDatesRoute: DepartmentDepIdSpecialDatesRoute,
   DepartmentDepIdTasksRoute: DepartmentDepIdTasksRoute,
 }
 

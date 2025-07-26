@@ -5,6 +5,7 @@ import { departmentObject } from "./department.js";
 import { organisationObject } from "./organisation.js";
 import { scheduleObject } from "./schedule.js";
 import { sessionObject } from "./session.js";
+import { specialDateObject } from "./specialDate.js";
 import { taskObject } from "./task.js";
 import { userObject } from "./user.js";
 
@@ -22,6 +23,7 @@ export default defineSchema({
     .index("by_slug_and_departmentId", ["slug", "departmentId"])
     .index("by_departmentId", ["departmentId"]),
   sessions: defineTable(sessionObject),
+  specialDates: defineTable(specialDateObject),
   tasks: defineTable(taskObject)
     .index("by_departmentId", ["departmentId"])
     .index("by_scheduleId", ["scheduleId"]),
