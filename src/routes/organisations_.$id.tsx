@@ -52,7 +52,7 @@ function RouteComponent() {
           <ul className="no-list">
             {organisation?.departments.map((department) => (
               <Link
-                to="/"
+                to="/organisations/$id/departments/$depId"
                 params={{ id: organisationId, depId: department._id }}
                 activeProps={{ className: "bg-gray-300" }}
                 className="block rounded-md p-2"

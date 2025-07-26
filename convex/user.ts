@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 import { userInputSchema } from "../src/features/user/user-model.ts";
 import type { Id } from "./_generated/dataModel";
-import { mutation, query } from "./_generated/server";
 import { zMutation } from "./utils.ts";
 
 export const userObject = {

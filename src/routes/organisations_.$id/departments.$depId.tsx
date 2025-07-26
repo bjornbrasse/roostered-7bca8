@@ -1,22 +1,7 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
-import { EllipsisVerticalIcon } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu.tsx";
 import { ListEmployees } from "~/features/department/components/list-employees.tsx";
 import { ScheduleDialog } from "~/features/schedule/components/schedule-dialog.tsx";
 import { MemberDialog } from "~/features/user/components/member-dialog";
@@ -34,10 +19,9 @@ export const Route = createFileRoute("/organisations_/$id/departments/$depId")({
 });
 
 function RouteComponent() {
+  const { depId: id } = Route.useParams({ shouldThrow: true });
   const { data: department } = useSuspenseQuery(
-    convexQuery(api.department.getById, {
-      id: Route.useParams().depId,
-    }),
+    convexQuery(api.department.getById, { id }),
   );
 
   return (

@@ -25,6 +25,7 @@ import { Route as SchedulesIdRouteImport } from './routes/schedules_.$id'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as OrganisationsIdRouteImport } from './routes/organisations_.$id'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
+import { Route as SchedulesIdIndexRouteImport } from './routes/schedules_.$id/index'
 import { Route as SchedulesIdTasksRouteImport } from './routes/schedules_.$id/tasks'
 import { Route as SchedulesIdMembersRouteImport } from './routes/schedules_.$id/members'
 import { Route as SchedulesIdForwardsRouteImport } from './routes/schedules_.$id/forwards'
@@ -106,6 +107,11 @@ const PathlessLayoutNestedLayoutRoute =
     id: '/_nested-layout',
     getParentRoute: () => PathlessLayoutRoute,
   } as any)
+const SchedulesIdIndexRoute = SchedulesIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SchedulesIdRoute,
+} as any)
 const SchedulesIdTasksRoute = SchedulesIdTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
+  '/schedules/$id/': typeof SchedulesIdIndexRoute
   '/organisations/$id/departments/$depId': typeof OrganisationsIdDepartmentsDepIdRoute
 }
 export interface FileRoutesByTo {
@@ -183,7 +190,6 @@ export interface FileRoutesByTo {
   '/redirect': typeof RedirectRoute
   '/organisations/$id': typeof OrganisationsIdRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
-  '/schedules/$id': typeof SchedulesIdRouteWithChildren
   '/users/$userId': typeof UsersUserIdRoute
   '/posts': typeof PostsIndexRoute
   '/users': typeof UsersIndexRoute
@@ -193,6 +199,7 @@ export interface FileRoutesByTo {
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
+  '/schedules/$id': typeof SchedulesIdIndexRoute
   '/organisations/$id/departments/$depId': typeof OrganisationsIdDepartmentsDepIdRoute
 }
 export interface FileRoutesById {
@@ -217,6 +224,7 @@ export interface FileRoutesById {
   '/schedules_/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules_/$id/members': typeof SchedulesIdMembersRoute
   '/schedules_/$id/tasks': typeof SchedulesIdTasksRoute
+  '/schedules_/$id/': typeof SchedulesIdIndexRoute
   '/organisations_/$id/departments/$depId': typeof OrganisationsIdDepartmentsDepIdRoute
 }
 export interface FileRouteTypes {
@@ -240,6 +248,7 @@ export interface FileRouteTypes {
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
+    | '/schedules/$id/'
     | '/organisations/$id/departments/$depId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -249,7 +258,6 @@ export interface FileRouteTypes {
     | '/redirect'
     | '/organisations/$id'
     | '/posts/$postId'
-    | '/schedules/$id'
     | '/users/$userId'
     | '/posts'
     | '/users'
@@ -259,6 +267,7 @@ export interface FileRouteTypes {
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
+    | '/schedules/$id'
     | '/organisations/$id/departments/$depId'
   id:
     | '__root__'
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/schedules_/$id/forwards'
     | '/schedules_/$id/members'
     | '/schedules_/$id/tasks'
+    | '/schedules_/$id/'
     | '/organisations_/$id/departments/$depId'
   fileRoutesById: FileRoutesById
 }
@@ -421,6 +431,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof PathlessLayoutNestedLayoutRouteImport
       parentRoute: typeof PathlessLayoutRoute
+    }
+    '/schedules_/$id/': {
+      id: '/schedules_/$id/'
+      path: '/'
+      fullPath: '/schedules/$id/'
+      preLoaderRoute: typeof SchedulesIdIndexRouteImport
+      parentRoute: typeof SchedulesIdRoute
     }
     '/schedules_/$id/tasks': {
       id: '/schedules_/$id/tasks'
@@ -566,12 +583,14 @@ interface SchedulesIdRouteChildren {
   SchedulesIdForwardsRoute: typeof SchedulesIdForwardsRoute
   SchedulesIdMembersRoute: typeof SchedulesIdMembersRoute
   SchedulesIdTasksRoute: typeof SchedulesIdTasksRoute
+  SchedulesIdIndexRoute: typeof SchedulesIdIndexRoute
 }
 
 const SchedulesIdRouteChildren: SchedulesIdRouteChildren = {
   SchedulesIdForwardsRoute: SchedulesIdForwardsRoute,
   SchedulesIdMembersRoute: SchedulesIdMembersRoute,
   SchedulesIdTasksRoute: SchedulesIdTasksRoute,
+  SchedulesIdIndexRoute: SchedulesIdIndexRoute,
 }
 
 const SchedulesIdRouteWithChildren = SchedulesIdRoute._addFileChildren(
