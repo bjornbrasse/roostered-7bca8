@@ -68,7 +68,7 @@ export const getEmployees = query({
   args: { departmentId: v.string() },
   handler: async (ctx, args) => {
     const department = await ctx.db.get(args.departmentId as Id<"departments">);
-    if (!department) throw new ConvexError("Department not found");
+    if (!department) return [];
     const departmentEmployees = await ctx.db
       .query("departmentEmployees")
       .withIndex("by_departmentId")
