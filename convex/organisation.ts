@@ -16,7 +16,7 @@ export const getById = query({
     const organisation = await ctx.db.get(
       args.organisationId as Id<"organisations">,
     );
-    if (!organisation) throw new ConvexError("Organisation not found");
+    // if (!organisation) throw new ConvexError("Organisation not found");
     return organisation;
   },
 });
