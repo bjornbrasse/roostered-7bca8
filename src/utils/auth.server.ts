@@ -3,9 +3,11 @@ import { request } from "node:http";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
+import { loginSchema } from "~/routes/auth/login.tsx";
 import { db } from "~/utils/convex.server.ts";
 import {
   requireUserMiddleware,
+  useAppSession,
   userSessionMiddleware,
 } from "~/utils/session.server.ts";
 import { PasswordAndConfirmPasswordSchema } from "~/utils/user-validation.ts";

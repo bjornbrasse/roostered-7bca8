@@ -3,18 +3,17 @@ import { createServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import z from "zod";
 import { cn } from "~/lib/utils.ts";
-import { hashPassword } from "~/utils/auth.server.ts";
 import { db } from "~/utils/convex.server.ts";
 import { useAppSession } from "~/utils/session.server.ts";
 
-// import { loginFn } from "~/components/Login.tsx";2
-// import { loginFn } from "~/components/Login.tsx";
-
-const loginSchema = z.discriminatedUnion("type", [
+export const loginSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("password"),
     email: z.string().email(),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
+    password: z
+      .string()
+      // .min(6, "Password must be at least 6 characters long")
+      .optional(),
   }),
   z.object({
     type: z.literal("email"),
@@ -27,24 +26,18 @@ const loginSchema = z.discriminatedUnion("type", [
 ]);
 type Mode = z.infer<typeof loginSchema>["type"];
 
-export const Route = createFileRoute("/auth/login")({
-  beforeLoad: ({ context }) => {
-    if (context.user) throw redirect({ to: "/" });
-  },
-  component: RouteComponent,
-});
-
 export const loginFn = createServerFn({ method: "POST" })
-  .validator((formData) => {
-    if (!(formData instanceof FormData)) {
-      throw new Error("Invalid form data");
-    }
-    const res = loginSchema.safeParse(Object.fromEntries(formData));
-    if (!res.success) throw new Error("Invalid form data");
-    return res.data;
+  .validator((formData: FormData) => {
+    return loginSchema.safeParse(Object.fromEntries(formData));
   })
   .handler(async ({ data }) => {
-    const user = await db.user.get_WITH_CREDENTIALS(data.email);
+    if (data.error) {
+      console.log("🚀 ~ result:", data.error.flatten());
+      return { ...data };
+    }
+    const values = data.data;
+    console.log("🚀 ~ values:", values);
+    const user = await db.user.get_WITH_CREDENTIALS(values.email);
 
     if (!user) {
       return {
@@ -55,7 +48,7 @@ export const loginFn = createServerFn({ method: "POST" })
     }
     const { _id, firstName, lastName } = user;
 
-    if (data.type === "password") {
+    if (values.type === "password") {
       // Check if the password is correct
       // const hashedPassword = await hashPassword(data.password);
       // if (user.password !== hashedPassword) {
@@ -80,6 +73,13 @@ export const loginFn = createServerFn({ method: "POST" })
       throw redirect({ to: "/" });
     }
   });
+
+export const Route = createFileRoute("/auth/login")({
+  beforeLoad: ({ context }) => {
+    if (context.user) throw redirect({ to: "/" });
+  },
+  component: RouteComponent,
+});
 
 export function RouteComponent() {
   const [mode, setMode] = useState<Mode>("password");

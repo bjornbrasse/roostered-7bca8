@@ -8,11 +8,13 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [
+    react(),
     tsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tanstackStart({ customViteReactPlugin: true }),
-    react(),
+    tanstackStart({
+      customViteReactPlugin: true,
+    }),
   ],
   esbuild: {
     // Allow TypeScript files to be imported with .ts/.tsx extensions
@@ -21,5 +23,9 @@ export default defineConfig({
   resolve: {
     // Ensure Vite resolves .ts/.tsx extensions properly
     extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+  },
+  // Add SSR configuration for better React 19 compatibility
+  ssr: {
+    noExternal: ["@tanstack/react-query", "@tanstack/react-router"],
   },
 });
