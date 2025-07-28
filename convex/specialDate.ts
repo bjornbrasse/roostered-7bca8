@@ -11,7 +11,7 @@ export const specialDateObject = {
   name: v.string(),
   organisationId: v.optional(v.id("organisations")),
   scheduleId: v.optional(v.id("schedules")),
-  start: v.float64(),
+  start: v.float64,
   styles: v.optional(
     v.object({
       backgroundColor: v.optional(v.string()),
@@ -20,18 +20,18 @@ export const specialDateObject = {
   updatedAt: v.optional(v.float64()),
 };
 
-export const create = zMutation({
-  args: specialDateInputSchema,
-  handler: async (
-    ctx,
-    { authorId, departmentId, organisationId, scheduleId, ...data },
-  ) => {
-    return await ctx.db.insert("specialDates", {
-      ...data,
-      authorId: authorId as Id<"users">,
-      departmentId: departmentId as Id<"departments">,
-      organisationId: organisationId as Id<"organisations">,
-      scheduleId: scheduleId as Id<"schedules">,
-    });
-  },
-});
+// export const create = zMutation({
+//   args: specialDateInputSchema,
+//   handler: async (
+//     ctx,
+//     { authorId, departmentId, organisationId, scheduleId, ...data },
+//   ) => {
+//     return await ctx.db.insert("specialDates", {
+//       ...data,
+//       authorId: authorId as Id<"users">,
+//       departmentId: departmentId as Id<"departments">,
+//       organisationId: organisationId as Id<"organisations">,
+//       scheduleId: scheduleId as Id<"schedules">,
+//     });
+//   },
+// });

@@ -23,7 +23,6 @@ export default defineSchema({
     .index("by_slug_and_departmentId", ["slug", "departmentId"])
     .index("by_departmentId", ["departmentId"]),
   sessions: defineTable(sessionObject),
-  specialDates: defineTable(specialDateObject),
   tasks: defineTable(taskObject)
     .index("by_departmentId", ["departmentId"])
     .index("by_scheduleId", ["scheduleId"]),
@@ -33,4 +32,8 @@ export default defineSchema({
     userId: v.id("users"),
   }),
   users: defineTable(userObject).index("by_email", ["email"]),
+  userCredentials: defineTable({
+    userId: v.id("users"),
+    passwordHash: v.string(),
+  }).index("by_userId", ["userId"]),
 });

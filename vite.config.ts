@@ -1,4 +1,5 @@
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
@@ -10,7 +11,8 @@ export default defineConfig({
     tsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
-    tanstackStart(),
+    tanstackStart({ customViteReactPlugin: true }),
+    react(),
   ],
   esbuild: {
     // Allow TypeScript files to be imported with .ts/.tsx extensions

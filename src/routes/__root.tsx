@@ -12,12 +12,18 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type * as React from "react";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
+import { UserDropdown } from "~/components/user-dropdown.tsx";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
+import { useAppSession } from "~/utils/session.server.ts";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
+  beforeLoad: async () => {
+    const session = await useAppSession();
+    return { user: session.data?.user };
+  },
   head: () => ({
     meta: [
       {
@@ -75,13 +81,19 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { user } = Route.useRouteContext();
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body className="h-screen">
-        {children}
+      <body className="flex h-screen flex-col">
+        <div className="bg-indigo-300 p-4 text-white">
+          <h1>Joi</h1>
+          <UserDropdown user={user} />
+        </div>
+        <div className="flex-1 border-2 border-red-300">{children}</div>
         <Scripts />
         {import.meta.env.DEV && (
           <>

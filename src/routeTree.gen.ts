@@ -21,12 +21,18 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as PostsIndexRouteImport } from './routes/posts.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
+import { Route as SettingsProfile2RouteImport } from './routes/settings/profile2'
+import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SchedulesIdRouteImport } from './routes/schedules_.$id'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as OrganisationsOrgIdRouteImport } from './routes/organisations_.$orgId'
 import { Route as DepartmentDepIdRouteImport } from './routes/department_.$depId'
+import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
 import { Route as SchedulesIdIndexRouteImport } from './routes/schedules_.$id/index'
+import { Route as SettingsProfilePasswordRouteImport } from './routes/settings/profile.password'
 import { Route as SchedulesIdTasksRouteImport } from './routes/schedules_.$id/tasks'
 import { Route as SchedulesIdMembersRouteImport } from './routes/schedules_.$id/members'
 import { Route as SchedulesIdForwardsRouteImport } from './routes/schedules_.$id/forwards'
@@ -38,6 +44,7 @@ import { Route as DepartmentDepIdEmployeesRouteImport } from './routes/departmen
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
 import { Route as OrgDepSdlRouteImport } from './routes/$org.$dep_.$sdl'
+import { Route as SettingsProfilePasswordCreateRouteImport } from './routes/settings/profile.password_.create'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api.users'
 import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
 
@@ -92,6 +99,16 @@ const UsersUserIdRoute = UsersUserIdRouteImport.update({
   path: '/$userId',
   getParentRoute: () => UsersRouteRoute,
 } as any)
+const SettingsProfile2Route = SettingsProfile2RouteImport.update({
+  id: '/settings/profile2',
+  path: '/settings/profile2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsProfileRoute = SettingsProfileRouteImport.update({
+  id: '/settings/profile',
+  path: '/settings/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SchedulesIdRoute = SchedulesIdRouteImport.update({
   id: '/schedules_/$id',
   path: '/schedules/$id',
@@ -112,6 +129,21 @@ const DepartmentDepIdRoute = DepartmentDepIdRouteImport.update({
   path: '/department/$depId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLogoutRoute = AuthLogoutRouteImport.update({
+  id: '/auth/logout',
+  path: '/auth/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathlessLayoutNestedLayoutRoute =
   PathlessLayoutNestedLayoutRouteImport.update({
     id: '/_nested-layout',
@@ -121,6 +153,11 @@ const SchedulesIdIndexRoute = SchedulesIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SchedulesIdRoute,
+} as any)
+const SettingsProfilePasswordRoute = SettingsProfilePasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
+  getParentRoute: () => SettingsProfileRoute,
 } as any)
 const SchedulesIdTasksRoute = SchedulesIdTasksRouteImport.update({
   id: '/tasks',
@@ -182,6 +219,12 @@ const OrgDepSdlRoute = OrgDepSdlRouteImport.update({
   path: '/$org/$dep/$sdl',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsProfilePasswordCreateRoute =
+  SettingsProfilePasswordCreateRouteImport.update({
+    id: '/password_/create',
+    path: '/password/create',
+    getParentRoute: () => SettingsProfileRoute,
+  } as any)
 const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
   id: '/api/users',
   path: '/api/users',
@@ -200,10 +243,15 @@ export interface FileRoutesByFullPath {
   '/deferred': typeof DeferredRoute
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/department/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules/$id': typeof SchedulesIdRouteWithChildren
+  '/settings/profile': typeof SettingsProfileRouteWithChildren
+  '/settings/profile2': typeof SettingsProfile2Route
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
@@ -218,16 +266,23 @@ export interface FileRoutesByFullPath {
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
+  '/settings/profile/password': typeof SettingsProfilePasswordRoute
   '/schedules/$id/': typeof SchedulesIdIndexRoute
+  '/settings/profile/password/create': typeof SettingsProfilePasswordCreateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deferred': typeof DeferredRoute
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/department/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/settings/profile': typeof SettingsProfileRouteWithChildren
+  '/settings/profile2': typeof SettingsProfile2Route
   '/users/$userId': typeof UsersUserIdRoute
   '/posts': typeof PostsIndexRoute
   '/users': typeof UsersIndexRoute
@@ -242,7 +297,9 @@ export interface FileRoutesByTo {
   '/schedules/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules/$id/members': typeof SchedulesIdMembersRoute
   '/schedules/$id/tasks': typeof SchedulesIdTasksRoute
+  '/settings/profile/password': typeof SettingsProfilePasswordRoute
   '/schedules/$id': typeof SchedulesIdIndexRoute
+  '/settings/profile/password/create': typeof SettingsProfilePasswordCreateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -254,10 +311,15 @@ export interface FileRoutesById {
   '/organisations': typeof OrganisationsRoute
   '/redirect': typeof RedirectRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/signup': typeof AuthSignupRoute
   '/department_/$depId': typeof DepartmentDepIdRouteWithChildren
   '/organisations_/$orgId': typeof OrganisationsOrgIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/schedules_/$id': typeof SchedulesIdRouteWithChildren
+  '/settings/profile': typeof SettingsProfileRouteWithChildren
+  '/settings/profile2': typeof SettingsProfile2Route
   '/users/$userId': typeof UsersUserIdRoute
   '/posts/': typeof PostsIndexRoute
   '/users/': typeof UsersIndexRoute
@@ -272,7 +334,9 @@ export interface FileRoutesById {
   '/schedules_/$id/forwards': typeof SchedulesIdForwardsRoute
   '/schedules_/$id/members': typeof SchedulesIdMembersRoute
   '/schedules_/$id/tasks': typeof SchedulesIdTasksRoute
+  '/settings/profile/password': typeof SettingsProfilePasswordRoute
   '/schedules_/$id/': typeof SchedulesIdIndexRoute
+  '/settings/profile/password_/create': typeof SettingsProfilePasswordCreateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -283,10 +347,15 @@ export interface FileRouteTypes {
     | '/deferred'
     | '/organisations'
     | '/redirect'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/signup'
     | '/department/$depId'
     | '/organisations/$orgId'
     | '/posts/$postId'
     | '/schedules/$id'
+    | '/settings/profile'
+    | '/settings/profile2'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
@@ -301,16 +370,23 @@ export interface FileRouteTypes {
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
+    | '/settings/profile/password'
     | '/schedules/$id/'
+    | '/settings/profile/password/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/deferred'
     | '/organisations'
     | '/redirect'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/signup'
     | '/department/$depId'
     | '/organisations/$orgId'
     | '/posts/$postId'
+    | '/settings/profile'
+    | '/settings/profile2'
     | '/users/$userId'
     | '/posts'
     | '/users'
@@ -325,7 +401,9 @@ export interface FileRouteTypes {
     | '/schedules/$id/forwards'
     | '/schedules/$id/members'
     | '/schedules/$id/tasks'
+    | '/settings/profile/password'
     | '/schedules/$id'
+    | '/settings/profile/password/create'
   id:
     | '__root__'
     | '/'
@@ -336,10 +414,15 @@ export interface FileRouteTypes {
     | '/organisations'
     | '/redirect'
     | '/_pathlessLayout/_nested-layout'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/signup'
     | '/department_/$depId'
     | '/organisations_/$orgId'
     | '/posts/$postId'
     | '/schedules_/$id'
+    | '/settings/profile'
+    | '/settings/profile2'
     | '/users/$userId'
     | '/posts/'
     | '/users/'
@@ -354,7 +437,9 @@ export interface FileRouteTypes {
     | '/schedules_/$id/forwards'
     | '/schedules_/$id/members'
     | '/schedules_/$id/tasks'
+    | '/settings/profile/password'
     | '/schedules_/$id/'
+    | '/settings/profile/password_/create'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -365,9 +450,14 @@ export interface RootRouteChildren {
   DeferredRoute: typeof DeferredRoute
   OrganisationsRoute: typeof OrganisationsRoute
   RedirectRoute: typeof RedirectRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthLogoutRoute: typeof AuthLogoutRoute
+  AuthSignupRoute: typeof AuthSignupRoute
   DepartmentDepIdRoute: typeof DepartmentDepIdRouteWithChildren
   OrganisationsOrgIdRoute: typeof OrganisationsOrgIdRoute
   SchedulesIdRoute: typeof SchedulesIdRouteWithChildren
+  SettingsProfileRoute: typeof SettingsProfileRouteWithChildren
+  SettingsProfile2Route: typeof SettingsProfile2Route
   OrgDepSdlRoute: typeof OrgDepSdlRoute
   PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
 }
@@ -468,6 +558,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersUserIdRouteImport
       parentRoute: typeof UsersRouteRoute
     }
+    '/settings/profile2': {
+      id: '/settings/profile2'
+      path: '/settings/profile2'
+      fullPath: '/settings/profile2'
+      preLoaderRoute: typeof SettingsProfile2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/profile': {
+      id: '/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof SettingsProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedules_/$id': {
       id: '/schedules_/$id'
       path: '/schedules/$id'
@@ -496,6 +600,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentDepIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/logout': {
+      id: '/auth/logout'
+      path: '/auth/logout'
+      fullPath: '/auth/logout'
+      preLoaderRoute: typeof AuthLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_pathlessLayout/_nested-layout': {
       id: '/_pathlessLayout/_nested-layout'
       path: ''
@@ -509,6 +634,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/schedules/$id/'
       preLoaderRoute: typeof SchedulesIdIndexRouteImport
       parentRoute: typeof SchedulesIdRoute
+    }
+    '/settings/profile/password': {
+      id: '/settings/profile/password'
+      path: '/password'
+      fullPath: '/settings/profile/password'
+      preLoaderRoute: typeof SettingsProfilePasswordRouteImport
+      parentRoute: typeof SettingsProfileRoute
     }
     '/schedules_/$id/tasks': {
       id: '/schedules_/$id/tasks'
@@ -586,6 +718,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$org/$dep/$sdl'
       preLoaderRoute: typeof OrgDepSdlRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/settings/profile/password_/create': {
+      id: '/settings/profile/password_/create'
+      path: '/password/create'
+      fullPath: '/settings/profile/password/create'
+      preLoaderRoute: typeof SettingsProfilePasswordCreateRouteImport
+      parentRoute: typeof SettingsProfileRoute
     }
   }
 }
@@ -702,6 +841,20 @@ const SchedulesIdRouteWithChildren = SchedulesIdRoute._addFileChildren(
   SchedulesIdRouteChildren,
 )
 
+interface SettingsProfileRouteChildren {
+  SettingsProfilePasswordRoute: typeof SettingsProfilePasswordRoute
+  SettingsProfilePasswordCreateRoute: typeof SettingsProfilePasswordCreateRoute
+}
+
+const SettingsProfileRouteChildren: SettingsProfileRouteChildren = {
+  SettingsProfilePasswordRoute: SettingsProfilePasswordRoute,
+  SettingsProfilePasswordCreateRoute: SettingsProfilePasswordCreateRoute,
+}
+
+const SettingsProfileRouteWithChildren = SettingsProfileRoute._addFileChildren(
+  SettingsProfileRouteChildren,
+)
+
 interface ApiUsersServerRouteChildren {
   ApiUsersIdServerRoute: typeof ApiUsersIdServerRoute
 }
@@ -722,9 +875,14 @@ const rootRouteChildren: RootRouteChildren = {
   DeferredRoute: DeferredRoute,
   OrganisationsRoute: OrganisationsRoute,
   RedirectRoute: RedirectRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthLogoutRoute: AuthLogoutRoute,
+  AuthSignupRoute: AuthSignupRoute,
   DepartmentDepIdRoute: DepartmentDepIdRouteWithChildren,
   OrganisationsOrgIdRoute: OrganisationsOrgIdRoute,
   SchedulesIdRoute: SchedulesIdRouteWithChildren,
+  SettingsProfileRoute: SettingsProfileRouteWithChildren,
+  SettingsProfile2Route: SettingsProfile2Route,
   OrgDepSdlRoute: OrgDepSdlRoute,
   PostsPostIdDeepRoute: PostsPostIdDeepRoute,
 }
